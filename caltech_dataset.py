@@ -1,3 +1,4 @@
+
 from torchvision.datasets import VisionDataset
 
 from PIL import Image
@@ -9,6 +10,8 @@ import pandas as pd
 from skimage import io, transform
 import numpy as np
 import matplotlib.pyplot as plt
+
+
 def pil_loader(path):
     # open path as file to avoid ResourceWarning (https://github.com/python-pillow/Pillow/issues/835)
     with open(path, 'rb') as f:
@@ -20,12 +23,11 @@ class Caltech(VisionDataset):
     def __init__(self, root, split='train', transform=None, target_transform=None):
         super(Caltech, self).__init__(root, transform=transform, target_transform=target_transform)
 
-        self.split = split # This defines the split you are going to use
-                           # (split files are called 'train.txt' and 'test.txt')
+        self.split = split  # This defines the split you are going to use
+        # (split files are called 'train.txt' and 'test.txt')
 
-
-        self.root = root+"/"+split+".txt" #./train.txt
-        self.caltech_frame = pd.read_csv(self.root, delimiter = '\n', header=None)
+        self.root = root + "/" + split + ".txt"  # Caltech101/train.txt
+        self.caltech_frame = pd.read_csv(self.root, delimiter='\n', header=None)
         self.transform = transform
         self.target_transform = target_transform
 
@@ -46,27 +48,18 @@ class Caltech(VisionDataset):
         Returns:
             tuple: (sample, target) where target is class_index of the target class.
         '''
-        img_name = os.path.join(self.root, self.caltech_frame.iloc[index, 0])
-        label = img_name.split("/")[3]
-        name = img_name.split("/")[4]
-        image = io.imread("./101_ObjectCategories/"+"/"+label+"/"+name)
-        
+        img_name = self.caltech_frame.iloc[index, 0] # accordion/image__00x.jpg
+        label = img_name.split("/")[0] #accordion
+        name = img_name.split("/")[1] #image_00x.jpg
+        image = io.imread("./Caltech101/101_ObjectCategories/" + label + "/" + name)
+
         image = Image.fromarray(image)
-        sample = {'image' : image, 'label' : label} # Provide a way to access image and label via index
-                           # Image should be a PIL Image
-                           # label can be int
+        sample = {'image': image, 'label': label}  # Provide a way to access image and label via index
+        # Image should be a PIL Image
+        # label can be int
 
         # Applies preprocessing when accessing the image
         if self.transform is not None:
             image = self.transform(image)
 
         return sample
-
-    def __len__(self):
-        '''
-        The __len__ method returns the length of the dataset
-        It is mandatory, as this is used by several other components
-        '''
-
-        length = self.caltech_frame.size # Provide a way to get the length (number of elements) of the dataset
-        return length
