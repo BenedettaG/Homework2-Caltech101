@@ -1,4 +1,3 @@
-
 from torchvision.datasets import VisionDataset
 
 from PIL import Image
@@ -51,9 +50,9 @@ class Caltech(VisionDataset):
         img_name = self.caltech_frame.iloc[index, 0] # accordion/image__00x.jpg
         label = img_name.split("/")[0] #accordion
         name = img_name.split("/")[1] #image_00x.jpg
-        image = io.imread("./Caltech101/101_ObjectCategories/" + label + "/" + name)
+        image = pil_loader("./Caltech101/101_ObjectCategories/" + label + "/" + name)
 
-        image = Image.fromarray(image)
+        #image = Image.fromarray(image)
         sample = {'image': image, 'label': label}  # Provide a way to access image and label via index
         # Image should be a PIL Image
         # label can be int
@@ -63,12 +62,12 @@ class Caltech(VisionDataset):
             image = self.transform(image)
 
         return sample
+
     def __len__(self):
         '''
         The __len__ method returns the length of the dataset
         It is mandatory, as this is used by several other components
         '''
 
-        length = self.caltech_frame.size # Provide a way to get the length (number of elements) of the dataset
+        length = self.caltech_frame.size  # Provide a way to get the length (number of elements) of the dataset
         return length
-
