@@ -46,7 +46,7 @@ class Caltech(VisionDataset):
         Returns:
             tuple: (sample, target) where target is class_index of the target class.
         '''
-        img_name = os.path.join(self.root+"suca", self.caltech_frame.iloc[index, 0])
+        img_name = os.path.join(self.root, self.caltech_frame.iloc[index, 0])
         label = img_name.split("/")[3]
         name = img_name.split("/")[4]
         image = io.imread("./101_ObjectCategories/"+"/"+label+"/"+name)
