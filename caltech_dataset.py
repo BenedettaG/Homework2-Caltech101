@@ -63,3 +63,12 @@ class Caltech(VisionDataset):
             image = self.transform(image)
 
         return sample
+    def __len__(self):
+        '''
+        The __len__ method returns the length of the dataset
+        It is mandatory, as this is used by several other components
+        '''
+
+        length = self.caltech_frame.size # Provide a way to get the length (number of elements) of the dataset
+        return length
+
